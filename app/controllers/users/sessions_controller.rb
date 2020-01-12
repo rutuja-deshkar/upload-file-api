@@ -8,9 +8,9 @@ class Users::SessionsController < Devise::SessionsController
 
     if user && user.valid_password?(sign_in_params[:password])
       @current_user = user
-      p "current user #{@current_user.email}"
+      render json: { id: user.id, email: user.email, message: "You have logged in successfully" }, status: :ok
     else
-      render json: { errors: { 'email or password' => ['is invalid'] } }, status: :unprocessable_entity
+      render json: { id: user.id, email: user.email, errors: { 'email or password' => ['is invalid'] } }, status: :unauthorized
     end
   end
 

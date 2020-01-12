@@ -1,18 +1,19 @@
 Rails.application.routes.draw do
   # devise_for :users
   # namespace :api, defaults: { format: :json } do
+  get 'users/:user_id/files/:id', to: "users/files#download"
   devise_scope :user do
-    post "users/registrations" => "users/registrations#create"  #working
-    # delete "users/:id" => "users/registrations#destroy"  #not working
-    get "users/:id" => "users/registrations#show"  #working
     get "users/sign_in" => "users/sessions#new"
-    post "users/login" => "users/sessions#create"  #working
+    post "users/sign_in" => "users/sessions#create"  #working
     delete "users/sign_out" => "users/sessions#destroy"
+    delete "users/" => "users/registrations#destroy"  #not working, undefined method `protect_against_forgery in sessions new
+    post "users/registrations" => "users/registrations#create"  #working
+    get "users/:id" => "users/registrations#show"  #working
   end
   # end
-  delete "users/:user_id/avatar/:id" => "users/avatars#destroy" #delete files, working
-  post "users/:user_id/avatar" => "users/avatars#create" #upload files, working
-  get "users/:user_id/avatar" => "users/avatars#show"  #show all uploaded files with blob-id, working
+  delete "users/:user_id/files/:id" => "users/files#destroy" #delete files, working
+  post "users/:user_id/files" => "users/files#create" #upload files, working
+  get "users/:user_id/files" => "users/files#index"  #show all uploaded files with blob-id, working
 
   devise_for :users, :controllers => {:registrations => "users/registrations",
                                       :sessions => "users/sessions"}
