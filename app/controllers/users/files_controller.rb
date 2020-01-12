@@ -1,4 +1,4 @@
-class Users::AvatarsController < ApplicationController
+class Users::FilesController < ApplicationController
   # before_action :authenticate_user!
   # before_action :set_user, only: [:create, :show, :destroy, :download]
 
@@ -10,25 +10,22 @@ class Users::AvatarsController < ApplicationController
     if @user.present? #&& user == current_user
       if @user.update(user_params)
         render :create, status: :created
-        # render json: success_json(user), status: :created
       else
         render json: error_json, status: :unprocessable_entity
       end
     else
       head :not_found
     end
-    # attach files to the user
-    # return success or error message
   end
 
   # show all files for the user
-  def show
+  def index
     @user = User.find(params[:user_id])
     if @user.present?
       if @user.files.attached?
-        render :show
+        render :index
       else
-        render json: error_avatar(@user), status: :not_found
+        render json: error_files(@user), status: :not_found
       end
     else
       head :not_found
@@ -37,8 +34,20 @@ class Users::AvatarsController < ApplicationController
 
   # download
   def download
+    @user = User.find(params[:user_id])
+    p "user: #{@user.inspect}"
+    if @user.present?
+      @user.files.each do |file|
+        if file.blob_id == params[:id].to_i
+          path = rails_blob_url(file)
+          redirect_to path
+          # send_file @path, :disposition => "attachment", x_sendfile: true
+        end
+      end
+    end
   end
 
+  # delete files
   def destroy
     @user = User.find(params[:user_id])
     if @user.present?
@@ -73,28 +82,17 @@ class Users::AvatarsController < ApplicationController
     params.require(:user).permit(:email, :password, files: [])
   end
 
-  def success_json(user)
-    {
-      user: {
-        id: user.id,
-        email: user.email,
-        message: "Files attached successfully",
-        avatar: user.files
-      }
-    }
-  end
-
   def error_json(user)
     { errors: user.errors.full_messages }
   end
 
 
-  def error_avatar(user)
+  def error_files(user)
     {
       user: {
         id: user.id,
         email: user.email,
-        avatar: "Avatar not attached"
+        message: "No files found"
       }
     }
   end
