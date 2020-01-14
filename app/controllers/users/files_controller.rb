@@ -1,5 +1,5 @@
 class Users::FilesController < ApplicationController
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
   # before_action :set_user, only: [:create, :show, :destroy, :download]
 
   # attach files for the user
@@ -40,8 +40,8 @@ class Users::FilesController < ApplicationController
       @user.files.each do |file|
         if file.blob_id == params[:id].to_i
           path = rails_blob_url(file)
-          redirect_to path
-          # send_file @path, :disposition => "attachment", x_sendfile: true
+          # redirect_to path
+          send_data path, :disposition => "attachment", x_sendfile: true
         end
       end
     end
