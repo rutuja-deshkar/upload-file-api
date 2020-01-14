@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   #   post "users/sign_in" => "users/sessions#create"  #working
   #   delete "users/sign_out" => "users/sessions#destroy"
   #   delete "users/" => "users/registrations#destroy"  #not working, undefined method `protect_against_forgery in sessions new
-  #   post "users/registrations" => "users/registrations#create"  #working
+  #   post "users/sign_up" => "users/registrations#create"  #working
   #   get "users/:id" => "users/registrations#show"  #working
   # end
   # end

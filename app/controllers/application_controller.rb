@@ -1,9 +1,7 @@
 class ApplicationController < ActionController::API
-  # include Response
-  # include ExceptionHandler
-  # protect_from_forgery with: :null_session
+  # include ActionController::MimeResponds
+  # respond_to :json
 
-  # before_action :authenticate_user!
   def render_resource(resource)
     if resource.errors.empty?
       render json: resource

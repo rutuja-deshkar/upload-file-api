@@ -1,7 +1,16 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  # skip_before_action :authenticate_user!, only: [:new, :create, :show]
   respond_to :json
 
+  # GET /resource/sign_up
+  def new
+    # super
+    render(status: :bad_request) && return if User.exists?(email: sign_up_params['email', 'password'])
+    build_resource(sign_up_params)
+    resource.save
+    render_resource(resource)
+  end
+
+  # POST /resource
   def create
     build_resource(sign_up_params)
 
