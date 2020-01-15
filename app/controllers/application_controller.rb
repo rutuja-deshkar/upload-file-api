@@ -3,6 +3,7 @@ class ApplicationController < ActionController::API
   # respond_to :json
 
   def render_resource(resource)
+    p "resource #{resource.inspect}"
     if resource.errors.empty?
       render json: resource
     else
