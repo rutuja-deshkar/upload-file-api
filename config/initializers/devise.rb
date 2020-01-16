@@ -300,12 +300,14 @@ Devise.setup do |config|
     # jwt.secret = ENV['DEVISE_JWT_SECRET']
     jwt.secret = ENV['DEVISE_SECRET_KEY']
     warn('warning: jwt.secret can not be nil') if jwt.secret.nil?
+    jwt.request_formats = { user: [nil, :json] }
     jwt.dispatch_requests = [
       ['POST', %r{^users/sign_in$}]
     ]
     jwt.revocation_requests = [
       ['DELETE', %r{^users/sign_out$}]
     ]
+
     jwt.expiration_time = 1.day.to_i
   end
   config.remember_for = 1.day.to_i

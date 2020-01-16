@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe 'POST users/sign_up', type: :request do
-  let(:url) { 'users/sign_up' }
+RSpec.describe 'POST /users', type: :request do
+  let(:url) { 'http://localhost:3000/users' }
   let(:params) do
     {
       user: {

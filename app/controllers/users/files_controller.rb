@@ -4,44 +4,40 @@ class Users::FilesController < ApplicationController
 
   # attach files for the user
   def create
-    # check if user is signed_in?   --- before action authenticate user only create, delete, update, not working
-    # if yes, find user
     @user = User.find(params[:user_id])
-    if @user.present? #&& user == current_user
-      if @user.update(user_params)
-        render :create, status: :created
+    if @user == current_user
+      if @user.present?
+        @user.update(user_params) ? render_create : render_error_json(@user)
       else
-        render json: error_json, status: :unprocessable_entity
+        head :not_found
       end
     else
-      head :not_found
+      render_unauthorized_error
     end
   end
 
   # show all files for the user
   def index
     @user = User.find(params[:user_id])
-    if @user.present?
-      if @user.files.attached?
-        render :index
+    if @user == current_user
+      if @user.present?
+        @user.files.attached? ? render_index : render_error_files(@user)
       else
-        render json: error_files(@user), status: :not_found
+        head :not_found
       end
     else
-      head :not_found
+      render_unauthorized_error
     end
   end
 
-  # download
+  # download files
   def download
     @user = User.find(params[:user_id])
-    p "user: #{@user.inspect}"
     if @user.present?
       @user.files.each do |file|
         if file.blob_id == params[:id].to_i
           path = rails_blob_url(file)
-          # redirect_to path
-          send_data path, :disposition => "attachment", x_sendfile: true
+          send_data path, disposition: "attachment", x_sendfile: true
         end
       end
     end
@@ -50,52 +46,80 @@ class Users::FilesController < ApplicationController
   # delete files
   def destroy
     @user = User.find(params[:user_id])
-    if @user.present?
-      if @user.files.any?
-        @user.files.each do |file|
-          if file.blob_id == params[:id].to_i
-            if file.destroy
-              render json: {
-                user_id: @user.id,
-                file_id: params[:id],
-                success: true,
-                message: "Files deleted"
-              }, status: :ok
-            else
-              render json: error_json(user), status: :unprocessable_entity
-            end
+    if current_user?
+      if @user.present?
+        if @user.files.any?
+          @user.files.each do |file|
+            find_and_delete_file(file)
           end
         end
+      else
+        head :not_found
       end
     else
-      head :not_found
+      render_unauthorized_error
     end
   end
 
   private
 
   def set_user
-    user = User.find(params[:user_id])
+    @user = User.find(params[:user_id])
   end
 
   def user_params
     params.require(:user).permit(:email, :password, files: [])
   end
 
-  def error_json(user)
-    { errors: user.errors.full_messages }
+  def current_user?
+    @user == current_user
   end
 
+  def find_and_delete_file(file)
+    if file.blob_id == params[:id].to_i
+      if file.purge
+        render_destroy_success(@user)
+      else
+        render_error_json
+      end
+    else
+      head :not_found #  file id not found
+    end
+  end
 
-  def error_files(user)
+  def render_error_json(user)
+    render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+  end
+
+  def render_index
+    render :index, status: :ok
+  end
+
+  def render_create
+    render :create, status: :created
+  end
+
+  def render_error_files(user)
+    render json:
     {
       user: {
         id: user.id,
         email: user.email,
         message: "No files found"
       }
-    }
+    }, status: :not_found
+  end
+
+  def render_unauthorized_error
+    render json: { success: false }, status: 401
+  end
+
+  def render_destroy_success(user)
+    render json: {
+      user_id: user.id,
+      file_id: params[:id],
+      success: true,
+      message: "Files deleted"
+    }, status: :ok
   end
 end
-
-

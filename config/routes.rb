@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # devise_for :users
   # namespace :api, defaults: { format: :json } do
+  # post 'auth_user' => 'users/authentication#authenticate_user'
   get 'users/:user_id/files/:id', to: "users/files#download"
   # devise_scope :user do
   #   get "users/sign_in" => "users/sessions#new"
