@@ -5,7 +5,7 @@ class Users::FilesController < ApplicationController
   # attach files for the user
   def create
     @user = User.find(params[:user_id])
-    if @user == current_user
+    if current_user?
       if @user.present?
         @user.update(user_params) ? render_create : render_error_json(@user)
       else
@@ -19,7 +19,7 @@ class Users::FilesController < ApplicationController
   # show all files for the user
   def index
     @user = User.find(params[:user_id])
-    if @user == current_user
+    if current_user?
       if @user.present?
         @user.files.attached? ? render_index : render_error_files(@user)
       else
@@ -38,6 +38,8 @@ class Users::FilesController < ApplicationController
         if file.blob_id == params[:id].to_i
           path = rails_blob_url(file)
           send_data path, disposition: "attachment", x_sendfile: true
+        else
+          head :not_found
         end
       end
     end
@@ -50,7 +52,7 @@ class Users::FilesController < ApplicationController
       if @user.present?
         if @user.files.any?
           @user.files.each do |file|
-            find_and_delete_file(file)
+            find_and_delete_file(file, @user)
           end
         end
       else
@@ -75,12 +77,12 @@ class Users::FilesController < ApplicationController
     @user == current_user
   end
 
-  def find_and_delete_file(file)
+  def find_and_delete_file(file, user)
     if file.blob_id == params[:id].to_i
       if file.purge
-        render_destroy_success(@user)
+        render_destroy_success(user)
       else
-        render_error_json
+        render_error_json(user)
       end
     else
       head :not_found #  file id not found

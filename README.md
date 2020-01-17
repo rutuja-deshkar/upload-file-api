@@ -1,6 +1,6 @@
 1. API end-points
 
-a) sign-up
+a) sign_up
 POST "/users"
 
 b) sign_in
@@ -10,23 +10,27 @@ c) Upload files for a user
 POST "/users/:user_id/files"
 
 d) Get all files for a user
-GET "users/:user_id/files"
+GET "/users/:user_id/files"
 
 e) Download a file for a user
-GET "users/:user_id/files/id"
+GET "/users/:user_id/files/id"
 
 f) Delete a file for a user
-DELETE "users/:user_id/files/id"
+DELETE "/users/:user_id/files/:id"
+
+g) Delete account
+DELETE "/users"
 
 2. Authentication
 I have used gem 'devise-jwt' for authentication. Create JWT secret key by typing rake secret in terminal. Save this key in .env file as
 DEVISE_SECRET_KEY=
 
 3. Testing API using Postman
-Start rails server from terminal
+
+3.1 Start rails server from terminal
 rails s
 
-a) sign-up
+a) sign_up
 POST "/users"
 
 Body:
@@ -65,8 +69,10 @@ user[files][]           select file field from dropdown. This gives an option to
 
 
 d) Get all files for a user
-GET "users/:user_id/files"
-eg: "users/4/files"
+GET "/users/:user_id/files"
+eg: "/users/4/files"
+
+Remove data from body(if present)
 
 Pass authentication token in header (same as step c above)
 
@@ -74,11 +80,15 @@ Pass authentication token in header (same as step c above)
 e) Download a file for a user
 GET "users/:user_id/files/id"
 
+Remove data from body(if present)
+
 Pass authentication token in header (same as step c above)
 
 
 f) Delete a file for a user
 DELETE "users/:user_id/files/id"
+
+Remove data from body(if present)
 
 Pass authentication token in header (same as step c above)
 
