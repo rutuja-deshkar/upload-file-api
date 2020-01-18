@@ -46,8 +46,8 @@ a) sign_up
 POST "/users"
 
 Body:
-key: user[email], value: test@example.com
-key: user[password], value: secret
+1)key: user[email], value: test@example.com
+2)key: user[password], value: secret
 
 authentication_token in response body will be null since the token is not stored in the database.
 While creating new user, remove bearer token from authorization tab (if present).
@@ -56,15 +56,15 @@ b) sign_in
 POST "/users/sign_in"
 
 Body:
-key: user[email], value: test@example.com
-key: user[password], value: secret
+1)key: user[email], value: test@example.com
+2)key: user[password], value: secret
 
 This request returns an authentication token in the response headers['Authorization']. This token should be used to upload, download or delete files for a user.
 authentication_token in response body will be null since the token is not stored to the database.
 example of authroization token in response header tab:
 
-key              value
-Authorization    Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMCIsInNjcCI6InVzZXIiLCJhdWQiOm51bGwsImlhdCI6MTU3OTE5OTA0MiwiZXhwIjoxNTc5Mjg1NDQyLCJqdGkiOiI0ZGI1Y2QyZC05N2Y1LTQ5YWItYTdhYi1mMjBmZWE2OWY3ODEifQ.9je9IQAe23Z2LEJp4fYmlk0JgSatCeWHG-y30P06QPA
+1)key: Authorization
+2)value: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMCIsInNjcCI6InVzZXIiLCJhdWQiOm51bGwsImlhdCI6MTU3OTE5OTA0MiwiZXhwIjoxNTc5Mjg1NDQyLCJqdGkiOiI0ZGI1Y2QyZC05N2Y1LTQ5YWItYTdhYi1mMjBmZWE2OWY3ODEifQ.9je9IQAe23Z2LEJp4fYmlk0JgSatCeWHG-y30P06QPA
 
 
 c) Upload files for a user
@@ -75,9 +75,9 @@ example of token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMCIsInNjcCI6InVzZXIiLCJhdWQiO
 
 Body:
 
-key: user[email], value: test@example.com
-key: user[password], value: secret
-key: user[files][], value: select file field from dropdown. This gives an option to attach file(s).
+1)key: user[email], value: test@example.com
+2)key: user[password], value: secret
+3)key: user[files][], value: select file field from dropdown. This gives an option to attach file(s).
 
 
 d) Get all files for a user
