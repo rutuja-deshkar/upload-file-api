@@ -70,7 +70,7 @@ Devise.setup do |config|
   # given strategies, for example, `config.http_authenticatable = [:database]` will
   # enable it only for database authentication. The supported strategies are:
   # :database      = Support basic authentication with authentication key + password
-  # config.http_authenticatable = false
+  config.http_authenticatable = true
 
   # If 401 status code should be returned for AJAX requests. True by default.
   # config.http_authenticatable_on_xhr = true
@@ -296,4 +296,21 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+  config.jwt do |jwt|
+    # jwt.secret = ENV['DEVISE_JWT_SECRET']
+    jwt.secret = ENV['DEVISE_SECRET_KEY']
+    warn('warning: jwt.secret can not be nil') if jwt.secret.nil?
+    jwt.request_formats = { user: [nil, :json] }
+    jwt.dispatch_requests = [
+      ['POST', %r{^users/sign_in$}]
+    ]
+    jwt.revocation_requests = [
+      ['DELETE', %r{^users/sign_out$}]
+    ]
+
+    jwt.expiration_time = 1.day.to_i
+  end
+  config.remember_for = 1.day.to_i
+  config.timeout_in = 1.day.to_i
+  config.navigational_formats = []
 end

@@ -1,7 +1,22 @@
 class ApplicationController < ActionController::API
-  # include Response
-  # include ExceptionHandler
-  # protect_from_forgery with: :null_session
+  def render_resource(resource)
+    if resource.errors.empty?
+      render json: resource
+    else
+      validation_error(resource)
+    end
+  end
 
-  # before_action :authenticate_user!
+  def validation_error(resource)
+    render json: {
+      errors: [
+        {
+          status: '400',
+          title: 'Bad Request',
+          detail: resource.errors,
+          code: '100'
+        }
+      ]
+    }, status: :bad_request
+  end
 end
