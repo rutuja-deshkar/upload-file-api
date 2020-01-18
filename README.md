@@ -22,8 +22,7 @@ g) Delete account
 DELETE "/users"
 
 2. Authentication
-I have used gem 'devise-jwt' for authentication. Create JWT secret key by typing rake secret in terminal. Save this key in .env file as
-DEVISE_SECRET_KEY=
+I have used gem 'devise-jwt' for authentication.
 
 3. Getting started
 
@@ -33,7 +32,10 @@ DEVISE_SECRET_KEY=
 3.2 Bundle install to retrieve gems:
     bundle install
 
-3.3 Start rails server in the console:
+3.3 Create JWT secret key by typing rake secret in terminal. Save this key in .env file as
+    DEVISE_SECRET_KEY=
+
+3.4 Start rails server in the console:
     rails s
 
 4. Testing API using Postman
