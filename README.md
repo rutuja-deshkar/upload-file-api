@@ -50,6 +50,8 @@ key                     value
 user[email]             test@example.com
 user[password]          secret
 
+authentication_token in response body will be null since the token is not stored in the database.
+While creating new user, remove bearer token from authorization tab (if present).
 
 b) sign_in
 POST "/users/sign_in"
@@ -60,6 +62,7 @@ user[email]             test@example.com
 user[password]          secret
 
 This request returns an authentication token in the response headers['Authorization']. This token should be used to upload, download or delete files for a user.
+authentication_token in response body will be null since the token is not stored to the database.
 example of authroization token in response header tab:
 
 key              value
