@@ -4,24 +4,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtBlacklist
-  # after_create :after_database_authentication
-  # before_save :generate_token
-
-  # def after_database_authentication
-  #   p "creating token"
-  #   @token = Devise.friendly_token
-  #   p "token #{@token}"
-  #   current_user.authentication_token = @token
-  #   # current_user.token_valid_time_in_minutes = 60
-  #   # current_user.token_validity_end_by = Time.now + 60  * 60
-  #   current_user.save
-  #   p "current_user #{current_user}"
-  #   format.json { render json: @token }
-  # end
-
-  # def generate_token
-  #   self.authentication_token = Devise.friendly_token
-  # end
 
   has_many_attached :files
   validates :email, :encrypted_password, presence: true
