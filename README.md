@@ -96,6 +96,8 @@ Remove data from body(if present)
 
 Pass authentication token in header (same as step c above)
 
+A url is sent in the response body. The user can open the link in browser and save the file.
+
 
 f) Delete a file for a user
 DELETE "users/:user_id/files/id"
