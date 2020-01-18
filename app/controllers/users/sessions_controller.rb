@@ -2,19 +2,8 @@
 
 class Users::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
-  # skip_before_action :verify_signed_out_user
-  respond_to :json
-  # original method
-  # def create
-  #   user = User.find_by_email(sign_in_params[:email])
 
-  #   if user && user.valid_password?(sign_in_params[:password])
-  #     @current_user = user
-  #     render json: { id: user.id, email: user.email, message: "You have logged in successfully" }, status: :ok
-  #   else
-  #     render json: { id: user.id, email: user.email, errors: { 'email or password' => ['is invalid'] } }, status: :unauthorized
-  #   end
-  # end
+  respond_to :json
 
   # GET /resource/sign_in
   def new

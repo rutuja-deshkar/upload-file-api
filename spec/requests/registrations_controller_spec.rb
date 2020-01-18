@@ -25,14 +25,8 @@ RSpec.describe 'POST /users', type: :request do
 
   context 'when user already exists' do
     before do
-      let(:user) { create(:user) }
-      let email: params[:user][:email]
+      Fabricate :user, email: params[:user][:email]
       post url, params: params
-    end
-    # before { post url, params: params }
-
-    it 'does not create a new user' do
-      expect(response).to have_http_status(422)
     end
 
     it 'returns bad request status' do
@@ -40,7 +34,8 @@ RSpec.describe 'POST /users', type: :request do
     end
 
     it 'returns validation errors' do
-      expect(json['errors'].first['title']).to eq('Bad Request')
+      response_body = JSON.parse(response.body)
+      expect(response_body['errors'].first['title']).to eq('Bad Request')
     end
   end
 end
