@@ -102,6 +102,15 @@ Remove data from body(if present)
 
 Pass authentication token in header (same as step c above)
 
+g) Delete account
+DELETE "/users"
+
+Remove data from body(if present)
+
+Pass authentication token in header (same as step c above)
+
+This step deletes the user account as well as all his files.
+
 
 5. Testing
 Rspec was the testing framework used for Rails. Tests are located under app/spec/
